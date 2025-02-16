@@ -5,6 +5,9 @@ Ipelets for IPE in lua
 It shows a simple minimum of code snippets to create a fully functional custom tool for IPE. It makes a rectangle by using two points. A line shows the diagonal of the future rectangle during drawing.
 
 ### Important
+* To install the Ipelets, copy the lua file into the ```~/.ipe/ipelets``` folder. If you have installed the flatpak version of Ipe, copy the lua files into ```~/.var/app/org.otfried.Ipe/.ipe/ipelets```.
+* To enable the quick reload tool then create a ```prefs.lua``` file inside the ```ipelets``` folder. Then add the line ```prefs.developer = true``` to the file.
+* To fix the text editor default size of Ipe add ```prefs.editor_size = { 1000, 600 }``` to ```prefs.lua```.
 * ```self.finish()`` needs to be called before ```self.model:creation```
 * all methods are necessary except the ```self:compute()```
 * be careful when using global variables! Some important already used global variable names are: ```name```, ```path```, ```dllname```, ```_G```, ```ipe```, ```ipeui```, ```math```, ```string```, ```table```, ```assert```, ```shortcuts```, ```prefs```, ```config```, ```mouse```, ```ipairs```, ```pairs```, ```print```, ```tonumber```, ```tostring```!
