@@ -6,7 +6,7 @@ It shows a simple minimum of code snippets to create a fully functional custom t
 
 ### Important
 * To install the Ipelets, copy the lua file into the ```~/.ipe/ipelets``` folder. If you have installed the flatpak version of Ipe, copy the lua files into ```~/.var/app/org.otfried.Ipe/.ipe/ipelets```.
-* To enable the quick reload tool then create a ```prefs.lua``` file inside the ```ipelets``` folder. Then add the line ```prefs.developer = true``` to the file.
+* To enable the quick reload tool create a ```prefs.lua``` file inside the ```ipelets``` folder. Then add the line ```prefs.developer = true``` to the file. It will appear in the ```Help/Developer``` menue.
 * To fix the text editor default size of Ipe add ```prefs.editor_size = { 1000, 600 }``` to ```prefs.lua```.
 * ```self.finish()`` needs to be called before ```self.model:creation```
 * All methods are necessary except the ```self:compute()```
