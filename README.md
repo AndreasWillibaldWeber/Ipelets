@@ -20,3 +20,12 @@ local shape = { type="curve", closed=true;
                     { type="segment"; V(self.p2.x, self.p2.y), V(self.p2.x, self.p1.y) },
                     { type="segment"; V(self.p2.x, self.p1.y), V(self.p1.x, self.p1.y) } }
 ```
+
+### Useful Ipelets Code Examples
+* https://github.com/lluisalemanypuig/ipe.autolabel
+* https://github.com/Marian-Braendle/ipe-lassotool/blob/main/lassotool.lua
+* https://github.com/otfried/ipe/blob/master/src/ipe/lua/main.lua
+* https://github.com/otfried/ipelets
+
+### Ipelib Documentation
+* https://ipe.otfried.org/ipelib/index.html
