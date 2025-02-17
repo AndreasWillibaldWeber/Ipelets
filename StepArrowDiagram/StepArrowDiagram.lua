@@ -137,7 +137,7 @@ end
 function STEPARROWDIAGRAM:mouseMove()
     if self.p1 then
         p = self.model.ui:pos()
-        self.path = { type="curve", closed=false; { type="segment"; self.p1, p } }
+        self.path = self:createArrowShape(self.p1, p)
         self.setShape({ self.path })
         self.model.ui:update(false)
     end
