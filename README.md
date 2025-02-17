@@ -11,6 +11,7 @@ It draws a single arrow to create a step arrow diagram using two points and some
 **To-dos for StepArrowDiagram**
 - [x] Replace the diagonal line through a rectangular boundary box
 - [x] Restructure the geometry generation and dialogue code
+- [ ] Add checkbox to switch *pathmode* between *filled* and *stokedfilled*
 - [ ] Add functionality to create more than one arrow at once
 - [ ] Read attributes from the stylesheet
 - [ ] Create default colour themes
