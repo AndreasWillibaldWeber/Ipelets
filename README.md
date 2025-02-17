@@ -16,6 +16,14 @@ It draws a single arrow to create a step arrow diagram using two points and some
 - [ ] Create default colour themes
 - [ ] Add different step arrow diagram styles
 
+## CircularStepArrowDiagram
+It draws circular arrows to create a step arrow diagram using two points and some UI entries.
+
+![Example](CircularStepArrowDiagram/img/CircularStepArrowDiagram_01.png)
+
+**To-dos for StepArrowDiagram**
+- [ ] Create the Ipelet
+
 ## BoxDraw
 A simple code showed how to create a fully functional custom tool for IPE. It makes a rectangle using two points. A line shows the diagonal of the future rectangle during drawing.
 
