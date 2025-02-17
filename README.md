@@ -9,7 +9,7 @@ It draws a single arrow to create a step arrow diagram using two points and some
 ![Result](StepArrowDiagram/img/StepArrowDiagram_03.png)
 
 **To-dos for StepArrowDiagram**
-- [ ] Replace the diagonal line through a rectangular boundary box
+- [x] Replace the diagonal line through a rectangular boundary box
 - [x] Restructure the geometry generation and dialogue code
 - [ ] Add functionality to create more than one arrow at once
 - [ ] Read attributes from the stylesheet
