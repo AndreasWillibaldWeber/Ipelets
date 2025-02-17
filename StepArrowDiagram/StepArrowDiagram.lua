@@ -17,9 +17,11 @@ S = ipe.Segment
 B = ipe.Bezier
 EYE = M()
 
-local TEXTSIZES = {"small", "normal", "large", "Large", "LARGE", "huge", "Huge"}
-local COLORS = {"gray", "red", "green", "blue", "orange"}
-local OPACITY = {"opaque", "75%", "50%", "30%", "10%"}
+local TEXTSIZES = { "Huge", "huge", "LARGE", "Large", "large", "normal", "small" }
+local COLORS = { "white", "gray", "darkgray", "black", "red", "darkred", "green", "darkgreen", "blue", "darkblue", "orange", "darkorange", "cyan", "darkcyan" }
+local TEXTCOLORS = { "black", "darkgray", "gray", "white" }
+local OPACITIES = { "opaque", "75%", "50%", "30%", "10%" }
+local PENS = { "ultrafat", "fat", "heavier", "normal"}
 
 ------------------ Local Functions -----------------
 
@@ -70,7 +72,7 @@ function STEPARROWDIAGRAM:createArrowPath(p1, p2, options)
     path:set("fill", options.color)
     path:set("opacity", options.opacity)
     path:set("stroke", "black")
-    path:set("pen", "fat")
+    path:set("pen", options.pen)
     return path
 end
 
@@ -80,6 +82,7 @@ function STEPARROWDIAGRAM:createArrowText(p1, p2, options)
     text:set("textsize", options.textsize)
     text:set("horizontalalignment", "hcenter")
     text:set("verticalalignment", "vcenter")
+    text:set("stroke", options.textcolor)
     return text
 end
 
@@ -93,23 +96,33 @@ end
 
 function STEPARROWDIAGRAM:createUi()
     local dialog = ipeui.Dialog(self.model.ui:win(), "Select a Textsize.")
-    dialog:add("text", "input", {}, 1, 1, 1, 2)
-    dialog:add("textsize", "combo", TEXTSIZES, 2, 1, 1, 2)
-    dialog:add("colors", "combo", COLORS, 3, 1, 1, 2)
-    dialog:add("opacity", "combo", OPACITY, 4, 1, 1, 2)
-    dialog:add("ok", "button", { label="&Ok", action="accept" }, 5, 2)
-    dialog:add("cancel", "button", { label="&Cancel", action="reject" }, 5, 1)
+    dialog:add("text_label", "label", {label="Text:"}, 1, 1)
+    dialog:add("text", "input", {}, 1, 2, 1, 3)
+    dialog:add("textsize_label", "label", {label="Textsize:"}, 2, 1)
+    dialog:add("textsize", "combo", TEXTSIZES, 2, 2, 1, 3)
+    dialog:add("textcolor_label", "label", {label="Textcolor:"}, 3, 1)
+    dialog:add("textcolor", "combo", TEXTCOLORS, 3, 2, 1, 3)
+    dialog:add("color_label", "label", {label="Color:"}, 4, 1)
+    dialog:add("color", "combo", COLORS, 4, 2, 1, 3)
+    dialog:add("opacity_label", "label", {label="Opacity:"}, 5, 1)
+    dialog:add("opacity", "combo", OPACITIES, 5, 2, 1, 3)
+    dialog:add("pen_label", "label", {label="Pen:"}, 6, 1)
+    dialog:add("pen", "combo", PENS, 6, 2, 1, 3)
+    dialog:add("ok", "button", { label="&Ok", action="accept" }, 7, 3, 1, 2)
+    dialog:add("cancel", "button", { label="&Cancel", action="reject" }, 7, 1, 1, 2)
     return dialog
 end
 
 function STEPARROWDIAGRAM:getUserInput(dialog)
     local result = dialog:execute()
-    if not result then return result, nil, nil, nil, nil end
-    local textsize = TEXTSIZES[dialog:get("textsize")]
-    local color = COLORS[dialog:get("colors")]
-    local opacity = OPACITY[dialog:get("opacity")]
+    if not result then return result, {} end
     local text = dialog:get("text")
-    return result, {textsize = textsize, color = color, opacity = opacity, text = text}
+    local textsize = TEXTSIZES[dialog:get("textsize")]
+    local textcolor = TEXTCOLORS[dialog:get("textcolor")]
+    local color = COLORS[dialog:get("color")]
+    local opacity = OPACITIES[dialog:get("opacity")]
+    local pen = PENS[dialog:get("pen")]
+    return result, { text = text, textsize = textsize, textcolor = textcolor, color = color, opacity = opacity, pen = pen }
 end
 
 function STEPARROWDIAGRAM:mouseButton(button, modifiers, press)
