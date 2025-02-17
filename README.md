@@ -19,7 +19,7 @@ It draws a single arrow to create a step arrow diagram using two points and some
 ## CircularStepArrowDiagram
 It draws circular arrows to create a step arrow diagram using two points and some UI entries.
 
-![Example](CircularStepArrowDiagram/img/CircularStepArrowDiagram_01.png)
+![Example](CircularStepArrowDiagram/img/CircularStepArrowDiagram_00.png)
 
 **To-dos for StepArrowDiagram**
 - [ ] Create the Ipelet
