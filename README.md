@@ -4,6 +4,10 @@ Ipelets for IPE in lua
 ## StepArrowDiagram
 It draws a single arrow to create a step arrow diagram using two points and some UI entries. 
 
+![Selecting the bounding box of the arrow](StepArrowDiagram/img/StepArrowDiagram_01.png)
+![Choosing the text, textsize, color and background opacity](StepArrowDiagram/img/StepArrowDiagram_02.png)
+![Result](StepArrowDiagram/img/StepArrowDiagram_03.png)
+
 ## BoxDraw
 It shows a simple minimum of code snippets to create a fully functional custom tool for IPE. It makes a rectangle by using two points. A line shows the diagonal of the future rectangle during drawing.
 
