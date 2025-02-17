@@ -17,15 +17,19 @@ S = ipe.Segment
 B = ipe.Bezier
 EYE = M()
 
+local TEXTSIZES = {"small", "normal", "large", "Large", "LARGE", "huge", "Huge"}
+local COLORS = {"gray", "red", "green", "blue", "orange"}
+local OPACITY = {"opaque", "75%", "50%", "30%", "10%"}
+
 ------------------ Local Functions -----------------
 
 --------------------- Box Draw ---------------------
-STEPARROWDIAGRAMM = {}
-STEPARROWDIAGRAMM.__index = STEPARROWDIAGRAMM
+STEPARROWDIAGRAM = {}
+STEPARROWDIAGRAM.__index = STEPARROWDIAGRAM
 
-function STEPARROWDIAGRAMM:new(model)
+function STEPARROWDIAGRAM:new(model)
     local tool = {}
-    _G.setmetatable(tool, STEPARROWDIAGRAMM)
+    _G.setmetatable(tool, STEPARROWDIAGRAM)
     tool.model = model
     tool.page = model:page()
     model.ui:shapeTool(tool)
@@ -35,14 +39,80 @@ function STEPARROWDIAGRAMM:new(model)
     return tool
 end
 
-function STEPARROWDIAGRAMM:finish()
+function STEPARROWDIAGRAM:finish()
     self.model.ui:finishTool()
 end
 
-function STEPARROWDIAGRAMM:compute()
+function STEPARROWDIAGRAM:compute(p1, p2)
+    local h = p2.y - p1.y
+    local b = p2.x - p1.x
+    local ba = h * 0.2
+    local mh = h / 2
+    local mb = b / 2
+    return h, b, ba, mh, mb
 end
 
-function STEPARROWDIAGRAMM:mouseButton(button, modifiers, press)
+function STEPARROWDIAGRAM:createArrowShape(p1, p2)
+    local _, _, ba, mh, mb = self:compute(p1, p2)
+    return { type="curve", closed=true;
+        { type="segment"; V(p1.x - ba, p1.y), V(p1.x, p1.y + mh) },
+        { type="segment"; V(p1.x, p1.y + mh), V(p1.x - ba, p2.y) },
+        { type="segment"; V(p1.x - ba, p2.y), V(p2.x - ba, p2.y) },
+        { type="segment"; V(p2.x - ba, p2.y), V(p2.x, p1.y + mh ) },
+        { type="segment"; V(p2.x, p1.y + mh), V(p2.x - ba, p1.y) },
+        { type="segment"; V(p2.x - ba, p1.y), V(p1.x, p1.y) } }
+end
+
+function STEPARROWDIAGRAM:createArrowPath(p1, p2, options)
+    local shape = self:createArrowShape(p1, p2)
+    local path = ipe.Path(self.model.attributes, {shape})
+    path:set("pathmode", "strokedfilled")
+    path:set("fill", options.color)
+    path:set("opacity", options.opacity)
+    path:set("stroke", "black")
+    path:set("pen", "fat")
+    return path
+end
+
+function STEPARROWDIAGRAM:createArrowText(p1, p2, options)
+    local _, _, _, mh, mb = self:compute(p1, p2)
+    local text = ipe.Text(self.model.attributes, options.text, V(p1.x + mb, p1.y + mh))
+    text:set("textsize", options.textsize)
+    text:set("horizontalalignment", "hcenter")
+    text:set("verticalalignment", "vcenter")
+    return text
+end
+
+function STEPARROWDIAGRAM:createArrowGroup(p1, p2)
+    local result, options = self:getUserInput(self:createUi())
+    if not result then return end
+    local path = self:createArrowPath(p1, p2, options)
+    local text = self:createArrowText(p1, p2, options)
+    return ipe.Group({path, text})
+end
+
+function STEPARROWDIAGRAM:createUi()
+    local dialog = ipeui.Dialog(self.model.ui:win(), "Select a Textsize.")
+    dialog:add("text", "input", {}, 1, 1, 1, 2)
+    dialog:add("textsize", "combo", TEXTSIZES, 2, 1, 1, 2)
+    dialog:add("colors", "combo", COLORS, 3, 1, 1, 2)
+    dialog:add("opacity", "combo", OPACITY, 4, 1, 1, 2)
+    dialog:add("ok", "button", { label="&Ok", action="accept" }, 5, 2)
+    dialog:add("cancel", "button", { label="&Cancel", action="reject" }, 5, 1)
+    return dialog
+end
+
+function STEPARROWDIAGRAM:getUserInput(dialog)
+    local result = dialog:execute()
+    if not result then return result, nil, nil, nil, nil end
+    local textsize = TEXTSIZES[dialog:get("textsize")]
+    local color = COLORS[dialog:get("colors")]
+    local opacity = OPACITY[dialog:get("opacity")]
+    local text = dialog:get("text")
+    return result, {textsize = textsize, color = color, opacity = opacity, text = text}
+end
+
+function STEPARROWDIAGRAM:mouseButton(button, modifiers, press)
     if not press then return end
     if button == 1 then
         if not self.p1 then
@@ -54,47 +124,7 @@ function STEPARROWDIAGRAMM:mouseButton(button, modifiers, press)
         end
         if self.p1 and self.p2 then
             self:finish()
-            local dialog = ipeui.Dialog(self.model.ui:win(), "Select a Textsize.")
-            local textsizes = {"small", "normal", "large", "Large", "LARGE", "huge", "Huge"}
-            local colors = {"gray", "red", "green", "blue"}
-            local opacity = {"opaque", "75%", "50%", "30%", "10%"}
-            dialog:add("text", "input", {}, 1, 1, 1, 2)
-            dialog:add("textsize", "combo", textsizes, 2, 1, 1, 2)
-            dialog:add("colors", "combo", colors, 3, 1, 1, 2)
-            dialog:add("opacity", "combo", opacity, 4, 1, 1, 2)
-            dialog:add("ok", "button", { label="&Ok", action="accept" }, 5, 2)
-            dialog:add("cancel", "button", { label="&Cancel", action="reject" }, 5, 1)
-            local r = dialog:execute()
-            if not r then return end
-            local ts = textsizes[dialog:get("textsize")]
-            local c = colors[dialog:get("colors")]
-            local o = opacity[dialog:get("opacity")]
-            local t = dialog:get("text")
-            local h = self.p2.y - self.p1.y
-            local b = self.p2.x - self.p1.x
-            local ba = h * 0.2
-            local mh = h / 2
-            local mb = b / 2
-            --ipeui.messageBox(self.model.ui:win(), "information", "[" .. t .. "]")
-            local shape = { type="curve", closed=true;
-                    { type="segment"; V(self.p1.x - ba, self.p1.y), V(self.p1.x, self.p1.y + mh) },
-                    { type="segment"; V(self.p1.x, self.p1.y + mh), V(self.p1.x - ba, self.p2.y) },
-                    { type="segment"; V(self.p1.x - ba, self.p2.y), V(self.p2.x - ba, self.p2.y) },
-                    { type="segment"; V(self.p2.x - ba, self.p2.y), V(self.p2.x, self.p1.y + mh ) },
-                    { type="segment"; V(self.p2.x, self.p1.y + mh), V(self.p2.x - ba, self.p1.y) },
-                    { type="segment"; V(self.p2.x - ba, self.p1.y), V(self.p1.x, self.p1.y) } }
-            local path = ipe.Path(self.model.attributes, {shape})
-            path:set("pathmode", "strokedfilled")
-            path:set("fill", c)
-            path:set("opacity", o)
-            path:set("stroke", "black")
-            path:set("pen", "fat")
-            local text = ipe.Text(self.model.attributes, t, V(self.p1.x + mb, self.p1.y + mh))
-            text:set("textsize", ts)
-            text:set("horizontalalignment", "hcenter")
-            text:set("verticalalignment", "vcenter")
-            local group = ipe.Group({path, text})
-            self.model:creation("create box", group)
+            self.model:creation("create box", self:createArrowGroup(self.p1, self.p2))
             self.page:deselectAll()
             self.model:runLatex()
         end
@@ -104,7 +134,7 @@ function STEPARROWDIAGRAMM:mouseButton(button, modifiers, press)
     end
 end
 
-function STEPARROWDIAGRAMM:mouseMove()
+function STEPARROWDIAGRAM:mouseMove()
     if self.p1 then
         p = self.model.ui:pos()
         self.path = { type="curve", closed=false; { type="segment"; self.p1, p } }
@@ -113,7 +143,7 @@ function STEPARROWDIAGRAMM:mouseMove()
     end
 end
 
-function STEPARROWDIAGRAMM:key(text, modifiers)
+function STEPARROWDIAGRAM:key(text, modifiers)
     if text == "\027" then -- Esc
         self:finish()
         return true
@@ -122,7 +152,7 @@ function STEPARROWDIAGRAMM:key(text, modifiers)
     end
 end
 
-function STEPARROWDIAGRAMM:explain()
+function STEPARROWDIAGRAM:explain()
     local s = "Left: Add vertex"
     self.model.ui:explain(s, 0)
 end
@@ -130,5 +160,5 @@ end
 ------------------------------------------------------
 
 function run(model)
-    STEPARROWDIAGRAMM:new(model)
+    STEPARROWDIAGRAM:new(model)
 end
