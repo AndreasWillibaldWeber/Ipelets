@@ -86,9 +86,7 @@ function STEPARROWDIAGRAM:createArrowText(p1, p2, options)
     return text
 end
 
-function STEPARROWDIAGRAM:createArrowGroup(p1, p2)
-    local result, options = self:getUserInput(self:createUi())
-    if not result then return end
+function STEPARROWDIAGRAM:createArrowGroup(p1, p2, options)
     local path = self:createArrowPath(p1, p2, options)
     local text = self:createArrowText(p1, p2, options)
     return ipe.Group({path, text})
@@ -137,7 +135,9 @@ function STEPARROWDIAGRAM:mouseButton(button, modifiers, press)
         end
         if self.p1 and self.p2 then
             self:finish()
-            self.model:creation("create box", self:createArrowGroup(self.p1, self.p2))
+            local result, options = self:getUserInput(self:createUi())
+            if not result then return end
+            self.model:creation("create box", self:createArrowGroup(self.p1, self.p2, options))
             self.page:deselectAll()
             self.model:runLatex()
         end
