@@ -28,6 +28,16 @@ It draws circular arrows to create a step arrow diagram using two points and som
 ## BoxDraw
 A simple code showed how to create a fully functional custom tool for IPE. It makes a rectangle using two points. A line shows the diagonal of the future rectangle during drawing.
 
+## IPEManual
+A simple extension to the official IPE manual. It contains additional valuable tips for using IPE.
+
+**To-dos for IPEManual**
+- [x] Rotation of text
+- [x] Rotation of text using LaTeX
+- [ ] Creating and using symbols
+- [ ] Creating and using decorators
+- [ ] Installing and using Ipelets 
+
 ## Important
 * To install the Ipelets, copy the lua file into the ```~/.ipe/ipelets``` folder. If you have installed the flatpak version of Ipe, copy the lua files into ```~/.var/app/org.otfried.Ipe/.ipe/ipelets```.
 * To enable the quick reload tool create a ```prefs.lua``` file inside the ```ipelets``` folder. Then add the line ```prefs.developer = true``` to the file. It will appear in the ```Help/Developer ``menu.
