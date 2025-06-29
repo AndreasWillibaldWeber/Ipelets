@@ -62,7 +62,7 @@ function STEPARROWDIAGRAM:createArrowShape(p1, p2)
         { type="segment"; V(p1.x - ba, p2.y), V(p2.x - ba, p2.y) },
         { type="segment"; V(p2.x - ba, p2.y), V(p2.x, p1.y + mh ) },
         { type="segment"; V(p2.x, p1.y + mh), V(p2.x - ba, p1.y) },
-        { type="segment"; V(p2.x - ba, p1.y), V(p1.x, p1.y) } }
+        { type="segment"; V(p2.x - ba, p1.y), V(p1.x - ba, p1.y) } }
 end
 
 function STEPARROWDIAGRAM:createArrowPath(p1, p2, options)
