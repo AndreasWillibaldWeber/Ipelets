@@ -10,6 +10,6 @@ Here you will find helpful tips for using IPE.
 
 ## Rotation of text using LaTeX
 
-1. Open the ```Document Properties``` under ```Edit```.
+1. Open the ```Document properties``` under ```Edit```.
 2. Add ```\usepackage{rotating}``` to the ```Latex preample``` field.
 3. Wrap your text with the LaTeX command ```\rotatebox{degrees}{youtext}```.
